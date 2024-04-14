@@ -1,0 +1,109 @@
+<div class="w-full m-auto text-center pt-10  pb-10 comments px-8 {{resultModeDark() ? 'themeDarkBg themeLightTxt' : 'themeLightBg  themeDarkTxt'}}">
+  <h2 class="text-4xl font-bold">{{ feature?.attributes?.title }}</h2>
+  <div class="sm:flex gap-3 justify-center mt-2">
+    <h4>
+      mag:
+      <span
+        class="{{
+          calculateMagnitudeColor(feature?.attributes?.magnitude)
+        }} px-2 rounded"
+        >{{ feature?.attributes?.magnitude }}</span
+      >
+      {{ feature?.attributes?.magType }}
+    </h4>
+    <span>|</span>
+    <h4>lon: {{ feature?.attributes?.coordinates?.longitude }}</h4>
+    <span>|</span>
+    <h4>lat: {{ feature?.attributes?.coordinates?.latitude }}</h4>
+  </div>
+  <div class="w-96 max-w-max m-auto text-start mt-6">
+    <p>
+      <i class="fa-solid fa-house-crack w-6"></i>
+      <span>
+        {{ convertMagnitudeType(feature?.attributes?.magType) }} ({{
+          feature?.attributes?.magType
+        }})</span
+      >
+    </p>
+    <p>
+      <i class="fa-solid fa-calendar w-6"></i>
+      <span> {{ feature?.attributes?.time | date : "dd-MM-YYYY" }}</span>
+    </p>
+    <p>
+      <i class="fa-solid fa-clock w-6"></i>
+      <span> {{ feature?.attributes?.time | date : "HH:mm:ss" }}</span>
+    </p>
+    <p>
+      <i class="fa-solid fa-house-tsunami w-6"></i>
+      <span>
+        {{ feature?.attributes?.tsunami ? "Si tsunami" : "No tsunami" }}</span
+      >
+    </p>
+    <p>
+      <i class="fa-solid fa-location-dot w-6"></i>
+      <span> {{ feature?.attributes?.place }}</span>
+    </p>
+  </div>
+  <div class="flex justify-center gap-4 mt-5">
+    <button
+      type="button"
+      routerLink="/earthquake/pages/{{ currentPage }}"
+      class="font-bold rounded-md py-2 px-3 {{resultModeDark() ? 'themeDarkTxt themeLightBg' : 'themeLightTxt themeDarkBg'}}"
+    >
+      Back to list
+    </button>
+    <a
+      [href]="feature?.links?.externalUrl"
+      target="_blank"
+      class=" {{resultModeDark() ? ' bg-gray-700 themeLightTxt' : ' themeDarkTxt bg-slate-100'}} rounded-md p-3 w-10 h-10 flex justify-center items-center"
+    >
+      <i class="fa-solid fa-link "></i>
+    </a>
+  </div>
+  <div class="mt-5 w-auto md:p-0 md:w-10/12 lg:w-2/3 xl:w-1/2 m-auto">
+    <h3 class="text-3xl">Comentarios</h3>
+    <hr class="bg-gray-500 w-14 m-auto mt-2 h-1 rounded" />
+    <div class="mt-5">
+      <textarea
+        type="text"
+        rows="5"
+        placeholder="Escribe un comentario es gratis"
+        class="rounded p-2 w-full focus:outline-none border-2 text-gray-800"
+        [(ngModel)]="bodyComment"
+      ></textarea>
+      <button
+        class="p-2 bg-blue-600 text-white w-full rounded"
+        (click)="addCommentFeature(feature?.id)"
+        type="button"
+      >
+        Publicar
+      </button>
+    </div>
+    <p class="flex items-center justify-center mt-3">
+      Opiniones: {{ feature?.attributes?.comments?.length }}
+    </p>
+    <div
+      *ngIf="exitsComments"
+      class="mt-5 w-full text-start space-y-3 overflow-y-auto h-96 p-2"
+    >
+      <div
+        class="shadow p-3 rounded w-full overflow-hidden bg-white"
+        *ngFor="let comment of feature?.attributes?.comments?.reverse()"
+      >
+        <h6 class="text-xs text-gray-500">
+          {{ comment.createdAt | date : "dd/MM/yyyy HH:mm:ss" }}
+        </h6>
+        <p
+          class="text-gray-800 overflow-auto"
+          role="text"
+          style="white-space: pre-line"
+        >
+          {{ comment.body }}
+        </p>
+      </div>
+    </div>
+    <p *ngIf="!exitsComments" class="mt-5">
+      No hay comentarios, ¿Te gustaría comentar?
+    </p>
+  </div>
+</div>
